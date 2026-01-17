@@ -102,3 +102,42 @@ When referencing scripts in workflow sections, use `${SKILL_DIR}/scripts/<name>.
 - Async/await patterns
 - Short variable names
 - Type-safe interfaces
+
+## Image Generation Guidelines
+
+Skills that require image generation MUST delegate to available image generation skills rather than implementing their own.
+
+### Image Generation Skill Selection
+
+1. Check available image generation skills in `skills/` directory
+2. Read each skill's SKILL.md to understand parameters and capabilities
+3. If multiple image generation skills available, ask user to choose preferred skill
+
+### Generation Flow Template
+
+Use this template when implementing image generation in skills:
+
+```markdown
+### Step N: Generate Images
+
+**Skill Selection**:
+1. Check available image generation skills (e.g., `baoyu-gemini-web`)
+2. Read selected skill's SKILL.md for parameter reference
+3. If multiple skills available, ask user to choose
+
+**Generation Flow**:
+1. Call selected image generation skill with:
+   - Prompt file path (or inline prompt)
+   - Output image path
+   - Any skill-specific parameters (refer to skill's SKILL.md)
+2. Generate images sequentially (one at a time)
+3. After each image, output progress: "Generated X/N"
+4. On failure, auto-retry once before reporting error
+```
+
+### Best Practices
+
+- Always read the image generation skill's SKILL.md before calling
+- Pass parameters exactly as documented in the skill
+- Handle failures gracefully with retry logic
+- Provide clear progress feedback to user
